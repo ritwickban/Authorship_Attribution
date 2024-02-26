@@ -274,7 +274,7 @@ def main(args):
             for i, sentence_tokens in enumerate(tokenized_text_test, start=1):
                 
                 #test_text=list(flatten(pad_both_ends(sent,n=2)for sent in sentence_tokens))
-                test_data1=list(bigrams(list(pad_both_ends(sentence_tokens,n=2))))
+                test_data1=list(trigrams(list(pad_both_ends(sentence_tokens,n=3))))
                 #line=" ".join(sentence_tokens)
                 #print(" ".join(sentence_tokens)[:100])  # Printing first 100 characters of the sentence
                 aust_perplexity = aust_mod.perplexity(test_data1)
@@ -306,7 +306,7 @@ def main(args):
             # Join the generated words into a string
                 gts1 = ' '.join(gt1)
             # Print the generated text
-                td=list(bigrams(list(pad_both_ends(gt1,n=2))))
+                td=list(trigrams(list(pad_both_ends(gt1,n=3))))
                 perp1a=aust_mod.perplexity(td)
                 perp1d=dick_mod.perplexity(td)
                 perp1t=tol_mod.perplexity(td)
@@ -319,7 +319,7 @@ def main(args):
             # Join the generated words into a string
                 gts2 = ' '.join(gt2)
             # Print the generated text
-                td1=list(bigrams(list(pad_both_ends(gt2,n=2))))
+                td1=list(trigrams(list(pad_both_ends(gt2,n=3))))
                 perp2a=aust_mod.perplexity(td1)
                 perp2d=dick_mod.perplexity(td1)
                 perp2t=tol_mod.perplexity(td1)
@@ -330,7 +330,7 @@ def main(args):
             # Join the generated words into a string
                 gts3 = ' '.join(gt3)
             # Print the generated text
-                td2=list(bigrams(list(pad_both_ends(gt3,n=2))))
+                td2=list(trigrams(list(pad_both_ends(gt3,n=3))))
                 perp3a=aust_mod.perplexity(td2)
                 perp3d=dick_mod.perplexity(td2)
                 perp3t=tol_mod.perplexity(td2)
@@ -341,7 +341,7 @@ def main(args):
             # Join the generated words into a string
                 gts4 = ' '.join(gt4)
             # Print the generated text
-                td3=list(bigrams(list(pad_both_ends(gt4,n=2))))
+                td3=list(trigrams(list(pad_both_ends(gt4,n=3))))
                 perp4a=aust_mod.perplexity(td3)
                 perp4d=dick_mod.perplexity(td3)
                 perp4t=tol_mod.perplexity(td3)
