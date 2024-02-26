@@ -19,7 +19,7 @@ from transformers import DataCollatorWithPadding
 import evaluate
 import numpy as np
 from transformers import AutoModelForSequenceClassification, TrainingArguments, Trainer
-
+from sklearn.metrics import accuracy_score
 
 
 
@@ -47,7 +47,7 @@ def load_data(file_list):
                 tolstoy = f.readlines()
             #print("Read Tolstoy file",tolstoy[0:10])
         elif file =='wilde_utf8.txt':
-            #print("Found Wilde file")
+            print("Found Wilde file")
             with open(file, 'r') as f:
                 wilde = f.readlines()
             #print("Read Wilde file",wilde[0:10])
@@ -121,12 +121,30 @@ def discriminative_approach():
     tokenized_train = train.map(preprocess_function, batched=True)
     tokenized_test = test.map(preprocess_function, batched=True)
     data_collator = DataCollatorWithPadding(tokenizer=tokenizer)
-    accuracy = evaluate.load('accuracy')
+    #accuracy = evaluate.load('accuracy')
     
+    def compute_label_wise_accuracy(predictions, references, label_indices):
+        
+        label_wise_accuracy = {}
+        for label, index in label_indices.items():
+            # Select only the predictions and references for the current label
+            relevant_predictions = predictions[references == index]
+            relevant_references = references[references == index]
+            
+            # Calculate accuracy for the current label
+            label_acc = accuracy_score(relevant_references, relevant_predictions)
+            label_wise_accuracy[label] = label_acc
+        return label_wise_accuracy
+
     def compute_metrics(eval_pred):
-        predictions, labels = eval_pred
-        predictions = np.argmax(predictions, axis=1)
-        return accuracy.compute(predictions=predictions, references=labels)
+        logits, labels = eval_pred
+        predictions = np.argmax(logits, axis=-1)
+        overall_accuracy = accuracy_score(labels, predictions)
+        
+        label_wise_accuracy = compute_label_wise_accuracy(predictions, labels, label2id)
+    
+        return {"overall_accuracy": overall_accuracy, **label_wise_accuracy}
+    
     
     labels = ['Austen', 'Wilde','Tolstoy','Dickens']
     id2label = {i: label for i, label in enumerate(labels)}
