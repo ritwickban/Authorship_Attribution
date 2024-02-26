@@ -47,7 +47,7 @@ def load_data(file_list):
                 tolstoy = f.readlines()
             #print("Read Tolstoy file",tolstoy[0:10])
         elif file =='wilde_utf8.txt':
-            print("Found Wilde file")
+            #print("Found Wilde file")
             with open(file, 'r') as f:
                 wilde = f.readlines()
             #print("Read Wilde file",wilde[0:10])
