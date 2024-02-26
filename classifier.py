@@ -12,13 +12,13 @@ from sklearn.metrics import classification_report
 import argparse
 import random
 from nltk.tokenize import sent_tokenize, word_tokenize
-'''import torch
+import torch
 from datasets import load_dataset
 from transformers import AutoTokenizer
 from transformers import DataCollatorWithPadding
 import evaluate
 import numpy as np
-from transformers import AutoModelForSequenceClassification, TrainingArguments, Trainer'''
+from transformers import AutoModelForSequenceClassification, TrainingArguments, Trainer
 
 
 
