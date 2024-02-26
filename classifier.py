@@ -12,13 +12,13 @@ from sklearn.metrics import classification_report
 import argparse
 import random
 from nltk.tokenize import sent_tokenize, word_tokenize
-import torch
+'''import torch
 from datasets import load_dataset
 from transformers import AutoTokenizer
 from transformers import DataCollatorWithPadding
 import evaluate
 import numpy as np
-from transformers import AutoModelForSequenceClassification, TrainingArguments, Trainer
+from transformers import AutoModelForSequenceClassification, TrainingArguments, Trainer'''
 
 
 
@@ -83,6 +83,7 @@ def generative_approach(train,test,s,author):
     threshold=float(500.000)
     correct_predictions = 0
     total_predictions = 0
+    failure_cases=[]
     for sentence in test:
         testdata=list(trigrams(list(pad_both_ends(sentence,n=3))))
         perplexity = model.perplexity(testdata)
@@ -90,11 +91,16 @@ def generative_approach(train,test,s,author):
         if perplexity < threshold:
             predicted_author = author
         else:
-         predicted_author = None
+            if(len(failure_cases)<5):
+                original_sentence = ' '.join(sentence)
+                failure_cases.append(original_sentence)
+                
+            predicted_author = None
         if predicted_author == author:
              correct_predictions += 1
     accuracy = correct_predictions / total_predictions if total_predictions != 0 else 0
     print(f"{author} Accuracy: {accuracy * 100:.2f}%")
+    #print(f"Five failure cases are:{failure_cases}\n)")
     return accuracy
     
 
