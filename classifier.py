@@ -47,7 +47,7 @@ def load_data(file_list):
                 tolstoy = f.readlines()
             #print("Read Tolstoy file",tolstoy[0:10])
         elif file =='wilde_utf8.txt':
-            #print("Found Wilde file")
+            print("Found Wilde file")
             with open(file, 'r') as f:
                 wilde = f.readlines()
             #print("Read Wilde file",wilde[0:10])
@@ -108,6 +108,9 @@ def generative_approach(train,test,s,author):
 def discriminative_approach():
     
     print("Discriminative Task\n")
+    
+    device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
+    print(f'device: {device}')
     
     # A big thank you to Zhongxing0129 for uploading the dataset!!
     train = load_dataset('Zhongxing0129/authorlist_train')
@@ -181,6 +184,26 @@ def discriminative_approach():
     
     #Training the model
     trainer.train()
+    
+    count=0
+    i=0
+    model_name="Roberta_author_Ritwick"
+    tokenizer = tokenizer
+    model = model
+    validation=tokenized_test['train']
+    while count!=5:
+      text=validation['text'][i]
+      inputs = tokenizer(text,return_tensors="pt")
+      with torch.no_grad():
+        inputs = inputs.to(device)
+        logits = model(**inputs).logits
+      predicted_class_id = logits.argmax().item()
+      if predicted_class_id!=validation['label'][i]:
+        print(text)
+        print('Confidence score:',torch.nn.functional.softmax(logits,dim=1))
+        print('Predict:',model.config.id2label[predicted_class_id],"->Actual:",model.config.id2label[validation['label'][i]])
+        count+=1
+      i+=1
     
     
     
